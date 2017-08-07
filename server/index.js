@@ -1,6 +1,19 @@
-var http = require('http');
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('it works\n');
-}).listen(8080, 'localhost');
-console.log('Server running at http://localhost:8080/');
+import express from 'express';
+import path from 'path';
+import bodyParser from 'body-parser';
+
+const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(express.static('/Users/john/github/tfdg/dist'));
+
+app.get('*', (req, res) => {
+  res.sendFile('/Users/john/github/tfdg/dist/index.html');
+});
+
+
+app.listen(8080, () => {
+  console.log('app is listening');
+});
