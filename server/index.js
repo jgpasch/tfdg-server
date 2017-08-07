@@ -7,10 +7,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static('/Users/john/github/tfdg/dist'));
+app.use(express.static('/home/john/dist'));
 
 app.get('*', (req, res) => {
-  res.sendFile('/Users/john/github/tfdg/dist/index.html');
+  res.sendFile('/home/john/dist/index.html');
 });
 
 
