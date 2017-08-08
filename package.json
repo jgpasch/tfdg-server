@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist/ && babel server/**/*.js --out-dir dist/",
-    "bs": "npm run build && node /dist/server/index.js",
+    "bs": "npm run build && node dist/server/index.js",
     "start": "nodemon --exec babel-node server/index.js"
   },
   "repository": {

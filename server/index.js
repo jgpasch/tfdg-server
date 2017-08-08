@@ -5,17 +5,6 @@ import cron from 'node-cron';
 import { exec } from 'child_process';
 import async from 'async';
 
-const task = cron.schedule('* * * * *', () => {
-  exec('/home/john/tfdg-server/scripts/runScripts.sh', (err, stdout, stderr) => {
-    if (err) {
-      console.log('error is: ', err);
-    }
-    console.log('cron worked');
-  });
-});
-
-task.start();
-
 const app = express();
 
 app.use(bodyParser.json());
@@ -24,8 +13,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('/home/john/dist'));
 
 app.post('/driveCallback', (req, res) => {
-  console.log(req.headers);
-  async.series([grabData(), importData()]);
+  console.log('update received, running scripts');
+  async.series([grabData, importData]);
   res.sendStatus(200);
 });
 
