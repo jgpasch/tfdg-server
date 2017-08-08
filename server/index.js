@@ -29,18 +29,20 @@ app.listen(8080, () => {
   console.log('app is listening');
 });
 
-function grabData() {
+function grabData(cb) {
   exec('/home/john/tfdg-server/parser/getDrive.py', (err, stdout, stderr) => {
     if (err) {
       console.log('error running getDrive.py');
     }
+    cb(null);
   });
 }
 
-function importData() {
+function importData(cb) {
   exec('/home/john/.nvm/versions/node/v8.2.1/bin/node /home/john/.nvm/versions/node/v8.2.1/lib/node_modules/firebase-import/bin/firebase-import.js --database_url https://tfdg-175615.firebaseio.com --json /home/john/tfdg-server/parser/homepage.json --path /homepage --force', (err, stdout, stderr) => {
     if (err) {
       console.log('error running import data');
     }
+    cb(null);
   });
 }
