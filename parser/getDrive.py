@@ -22,7 +22,7 @@ except ImportError:
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/drive-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/drive'
+SCOPES = 'https://www.googleapis.com/auth/drive.readonly'
 home_dir = os.path.expanduser('~')
 # secret_file = os.path.join(home_dir, 'py3-drive', 'src', 'quickstart.py')
 
