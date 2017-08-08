@@ -22,6 +22,8 @@ app.get('*', (req, res) => {
   res.sendFile('/home/john/dist/index.html');
 });
 
+// uncomment for production
+async.series([grabData, importData]);
 
 app.listen(8080, () => {
   console.log('app is listening');
