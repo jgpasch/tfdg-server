@@ -104,8 +104,7 @@ def main():
     Creates a Google Drive API service object and outputs the names and IDs
     for up to 10 files.
     """
-    # file_id = '1vrLGQd0CXhMALkdLTZr7TkDz7tTGBZMPVvGKTrgWnWo'
-    file_id_ = '1nlPUdGwrmBEoiSmSoJO8vc4arI-iNaPTJG5k22FijE4'
+    file_id = '1vrLGQd0CXhMALkdLTZr7TkDz7tTGBZMPVvGKTrgWnWo'
 
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
