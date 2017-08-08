@@ -21,7 +21,7 @@ except ImportError:
     flags = None
 
 # If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/drive-python-quickstart.json
+# at ~/.credentials/tfdg-drive-api-creds.json
 SCOPES = 'https://www.googleapis.com/auth/drive.readonly'
 home_dir = os.path.expanduser('~')
 # secret_file = os.path.join(home_dir, 'py3-drive', 'src', 'quickstart.py')
@@ -44,7 +44,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'drive-python-quickstart.json')
+                                   'tfdg-drive-api-creds.json')
 
     store = Storage(credential_path)
     credentials = store.get()
