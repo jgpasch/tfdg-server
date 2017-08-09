@@ -4,3 +4,5 @@
 /parser/localGetDrive.py
 /parser/data.csv
 /parser/homepage.json
+/server/watchResponse.txt
+/server/localSetupWatch.py
