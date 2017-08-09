@@ -7,6 +7,7 @@ import io
 import datetime
 import csv
 import json
+import requests
 
 from apiclient import discovery
 from oauth2client import client
@@ -104,7 +105,11 @@ def main():
     Creates a Google Drive API service object and outputs the names and IDs
     for up to 10 files.
     """
-    file_id = '1vrLGQd0CXhMALkdLTZr7TkDz7tTGBZMPVvGKTrgWnWo'
+    firebase_url = 'https://tfdg-175615.firebaseio.com/config.json'
+
+    result = requests.get(firebase_url)
+
+    file_id = result.json()['file_id']
 
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
