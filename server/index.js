@@ -25,6 +25,15 @@ app.get('*', (req, res) => {
 // uncomment for production
 async.series([grabData, importData]);
 
+// call setupWatch once, and then start a cron job to run it every 2 minutes.
+setupWatch();
+
+// const task = cron.schedule('0 3 * * *', () => {
+//   console.log('will execute now');
+//   setupWatch();
+// });
+// task.start();
+
 app.listen(8080, () => {
   console.log('app is listening');
 });
@@ -44,5 +53,13 @@ function importData(cb) {
       console.log('error running import data');
     }
     cb(null);
+  });
+}
+
+function setupWatch() {
+  exec('/home/john/tfdg-server/server/setupWatch.py', (err, stdout, stderr) => {
+    if (err) {
+      console.log('error running setupWatch.py');
+    }
   });
 }

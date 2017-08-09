@@ -56,7 +56,8 @@ def main():
 
   now = time.time() * 1000
   # tomorrow = int(now) + 86000000
-  expiration = int(now) + 120000
+  # expiration = int(now) + 180000
+  expiration = int(now) + (3600000 * 23)
 
   data = { "id": str(uuid.uuid4()),
            "type": "web_hook",
@@ -69,8 +70,9 @@ def main():
   service = discovery.build('drive', 'v3', http=http)
   res = service.files().watch(fileId=file_id, body=data).execute()
 
-  f_write = open('/home/john/tfdg-server/server/watchResponse.txt', 'w')
+  f_write = open('/home/john/tfdg-server/server/watchResponse.txt', 'a')
   f_write.write(json.dumps(res))
+  f_write.write('\n\n')
   f_write.close()
 
 if __name__ == '__main__':
