@@ -5,7 +5,7 @@ import cron from 'node-cron';
 import { exec } from 'child_process';
 import async from 'async';
 import * as admin from 'firebase-admin';
-import serviceAccount from '../config/firebase-admin.json';
+import * as serviceAccount from '/home/john/tfdg-server/config/firebase-admin.json';
 
 // init service account sdk admin
 console.log(serviceAccount);
