@@ -12,6 +12,9 @@ import uuid
 import time
 from firebase import firebase
 import datetime
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
 
 try:
     import argparse
@@ -51,10 +54,9 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def removeOldWatch(http):
-  firebase_url = 'https://tfdg-175615.firebaseio.com/config/watchResponse.json'
-  result = requests.get(firebase_url)
-  res = result.json()
+def removeOldWatch(http, configRes):
+  res = configRes['watchResponse']
+  print(res)
 
   try:
     channelId = res['channelId']
@@ -100,17 +102,20 @@ def removeOldWatch(http):
   f.close()
 
 def main():
-  global firebase
-  firebase_url = 'https://tfdg-175615.firebaseio.com'
-  config_url = firebase_url + '/config.json'
-  firebase = firebase.FirebaseApplication(firebase_url, None)
+  # setup admin service account for authorized writing to DB
+  global credentials
+  cred = credentials.Certificate('/home/john/tfdg-server/config/firebase-admin.json')
+  fb_app = firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://tfdg-175615.firebaseio.com'
+  })
 
-  result = requests.get(config_url)
-  file_id = result.json()['file_id']
+  configRef = db.reference('/config')
+
+  configRes = configRef.get()
+  file_id = configRes['file_id']
 
   now = time.time() * 1000
   expiration = int(now) + (3600000 * 13)
-  # expiration = int(now) + 70000
 
   data = { "id": str(uuid.uuid4()),
            "type": "web_hook",
@@ -121,7 +126,7 @@ def main():
   http = credentials.authorize(httplib2.Http())
 
   # remove old watcher _ channel => stop
-  removeOldWatch(http)
+  removeOldWatch(http, configRes)
 
   service = discovery.build('drive', 'v3', http=http)
   res = service.files().watch(fileId=file_id, body=data).execute()
@@ -135,13 +140,11 @@ def main():
   data = {
     'channelId': res['id'],
     'resourceId': res['resourceId'],
-    'address': 'https://bigspender.info/driveCallback',
-    'kind': 'api#channel',
-    'type': 'web_hook',
     'resourceUri': res['resourceUri'],
     'expiration': res['expiration']
   }
-  firebase.put('/config', data=data, name="watchResponse")
+  # firebase.put('/config', data=data, name="watchResponse")
+  configRef.child('watchResponse').update(data)
 
 if __name__ == '__main__':
   main()
