@@ -55,12 +55,18 @@ def removeOldWatch(http):
   result = requests.get(firebase_url)
   res = result.json()
 
-  channelId = res['channelId']
-  resourceId = res['resourceId']
-  address = res['address']
-  resourceUri = res['resourceUri']
-  kind = res['kind']
-  myType = res['type']
+  try:
+    channelId = res['channelId']
+    resourceId = res['resourceId']
+    address = res['address']
+    resourceUri = res['resourceUri']
+    kind = res['kind']
+    myType = res['type']
+  except KeyError:
+    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'w')
+    f.write('key error, abandoning stop response')
+    f.close()
+    return
 
   service = discovery.build('drive', 'v3', http=http)
 
@@ -72,7 +78,15 @@ def removeOldWatch(http):
     'kind': kind,
     'type': myType
   }
-  res = service.channels().stop(body=body).execute()
+
+  try:
+    res = service.channels().stop(body=body).execute()
+  except:
+    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'w')
+    f.write('error making http stop request to channels')
+    f.close()
+
+  # worked as intended, print response to file - should be empty string if it worked
   f = open('/home/john/tfdg-server/server/stopResponse.txt', 'w')
   f.write(json.dumps(res))
   f.close()
