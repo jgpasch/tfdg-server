@@ -104,8 +104,8 @@ def main():
   file_id = result.json()['file_id']
 
   now = time.time() * 1000
-  # expiration = int(now) + (3600000 * 24)
-  expiration = int(now) + 70000
+  expiration = int(now) + (3600000 * 13)
+  # expiration = int(now) + 70000
 
   data = { "id": str(uuid.uuid4()),
            "type": "web_hook",

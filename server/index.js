@@ -28,7 +28,7 @@ async.series([grabData, importData]);
 // call setupWatch once, and then start a cron job to run it every 2 minutes.
 setupWatch();
 
-const task = cron.schedule('* * * * *', () => {
+const task = cron.schedule('0 1,13 * * *', () => {
   console.log('stopping old watch and starting a new one');
   setupWatch();
 });
