@@ -63,7 +63,7 @@ def removeOldWatch(http):
     kind = res['kind']
     myType = res['type']
   except KeyError:
-    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'a')
+    f = open('/home/john/tfdg-server/server/stopResponse.txt', 'a')
     f.write('\n\n')
     f.write('key error, abandoning stop response')
     f.close()
@@ -83,10 +83,11 @@ def removeOldWatch(http):
   try:
     res = service.channels().stop(body=body).execute()
   except:
-    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'a')
+    f = open('/home/john/tfdg-server/server/stopResponse.txt', 'a')
     f.write('\n\n')
     f.write('error making http stop request to channels')
     f.close()
+    return
 
   # worked as intended, print response to file - should be empty string if it worked
   f = open('/home/john/tfdg-server/server/stopResponse.txt', 'a')
