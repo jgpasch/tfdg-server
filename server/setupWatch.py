@@ -10,7 +10,6 @@ from oauth2client import tools
 import httplib2
 import uuid
 import time
-from firebase import firebase
 import datetime
 import firebase_admin
 from firebase_admin import credentials
@@ -25,6 +24,7 @@ except ImportError:
 CLIENT_SECRET_FILE = '/home/john/tfdg-server/config/client_secret.json'
 SCOPES = 'https://www.googleapis.com/auth/drive.readonly'
 APPLICATION_NAME = 'Drive API Python Quickstart'
+OLD_FILE_ID = ''
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -59,7 +59,10 @@ def removeOldWatch(http, configRes):
   print(res)
 
   try:
-    channelId = res['channelId']
+    if not OLD_FILE_ID:
+      channelId = res['channelId']
+    else:
+      channelId = OLD_FILE_ID
     resourceId = res['resourceId']
     address = res['address']
     resourceUri = res['resourceUri']
@@ -145,6 +148,9 @@ def main():
   }
   # firebase.put('/config', data=data, name="watchResponse")
   configRef.child('watchResponse').update(data)
+
+  # save old channel id for when the file id changes in firebase
+  OLD_FILE_ID = res['id']
 
 if __name__ == '__main__':
   main()

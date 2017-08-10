@@ -18,6 +18,12 @@ const db = admin.database();
 const homepageRef = db.ref('/homepage');
 const configRef = db.ref('/config');
 
+configRef.child('file_id').on('value', (snapshot) => {
+  console.log('file id changed, running scripts');
+  async.series([grabData, importData]);
+  setupWatch();
+});
+
 const app = express();
 
 app.use(bodyParser.json());
