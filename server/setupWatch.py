@@ -50,13 +50,15 @@ def get_credentials():
     return credentials
 
 def main():
-  firebase_url = 'https://tfdg-175615.firebaseio.com/config.json'
-  result = requests.get(firebase_url)
+  global firebase
+  firebase_url = 'https://tfdg-175615.firebaseio.com'
+  config_url = firebase_url + '/config.json'
+  firebase = firebase.FirebaseApplication(firebase_url, None)
+
+  result = requests.get(config_url)
   file_id = result.json()['file_id']
 
   now = time.time() * 1000
-  # tomorrow = int(now) + 86000000
-  # expiration = int(now) + 180000
   expiration = int(now) + (3600000 * 24)
 
   data = { "id": str(uuid.uuid4()),
@@ -74,6 +76,10 @@ def main():
   f_write.write(json.dumps(res))
   f_write.write('\n\n')
   f_write.close()
+
+  # make post request to firebase, to save the latest channelId and resouceId
+  data = { 'channelId': res['id'], 'resourceId': res['resourceId'] }
+  firebase.put('/config', data=data, name="watchResponse")
 
 if __name__ == '__main__':
   main()
