@@ -4,15 +4,19 @@ import bodyParser from 'body-parser';
 import cron from 'node-cron';
 import { exec } from 'child_process';
 import async from 'async';
+import fs from 'fs';
 import * as admin from 'firebase-admin';
 import * as serviceAccount from '/home/john/tfdg-server/config/firebase-admin.json';
 
 // init service account sdk admin
-console.log(serviceAccount);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://tfdg-175615.firebaseio.com/'
 });
+
+const db = admin.database();
+const homepageRef = db.ref('/homepage');
+const configRef = db.ref('/config');
 
 const app = express();
 
@@ -35,7 +39,7 @@ app.get('*', (req, res) => {
 async.series([grabData, importData]);
 
 // call setupWatch once, and then start a cron job to run it every 2 minutes.
-setupWatch();
+// setupWatch();
 
 const task = cron.schedule('0 1,13 * * *', () => {
   console.log('stopping old watch and starting a new one');
@@ -57,11 +61,8 @@ function grabData(cb) {
 }
 
 function importData(cb) {
-  exec('/home/john/.nvm/versions/node/v8.2.1/bin/node /home/john/.nvm/versions/node/v8.2.1/lib/node_modules/firebase-import/bin/firebase-import.js --database_url https://tfdg-175615.firebaseio.com --json /home/john/tfdg-server/parser/homepage.json --path /homepage --force', (err, stdout, stderr) => {
-    if (err) {
-      console.log('error running import data');
-    }
-    cb(null);
+  fs.readFile('/home/john/tfdg-server/parser/homepage.json', 'utf-8', (err, data) => {
+    homepageRef.set(JSON.parse(data));
   });
 }
 
