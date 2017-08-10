@@ -63,7 +63,8 @@ def removeOldWatch(http):
     kind = res['kind']
     myType = res['type']
   except KeyError:
-    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'w')
+    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'a')
+    f.write('\n\n')
     f.write('key error, abandoning stop response')
     f.close()
     return
@@ -82,12 +83,14 @@ def removeOldWatch(http):
   try:
     res = service.channels().stop(body=body).execute()
   except:
-    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'w')
+    f = open('/Users/john/github/tfdg-server/server/stopResponse.txt', 'a')
+    f.write('\n\n')
     f.write('error making http stop request to channels')
     f.close()
 
   # worked as intended, print response to file - should be empty string if it worked
-  f = open('/home/john/tfdg-server/server/stopResponse.txt', 'w')
+  f = open('/home/john/tfdg-server/server/stopResponse.txt', 'a')
+  f.write('\n\n')
   f.write(json.dumps(res))
   f.close()
 
@@ -101,7 +104,8 @@ def main():
   file_id = result.json()['file_id']
 
   now = time.time() * 1000
-  expiration = int(now) + (3600000 * 24)
+  # expiration = int(now) + (3600000 * 24)
+  expiration = int(now) + 70000
 
   data = { "id": str(uuid.uuid4()),
            "type": "web_hook",
