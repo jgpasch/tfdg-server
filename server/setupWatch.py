@@ -11,6 +11,7 @@ import httplib2
 import uuid
 import time
 from firebase import firebase
+import datetime
 
 try:
     import argparse
@@ -65,6 +66,7 @@ def removeOldWatch(http):
   except KeyError:
     f = open('/home/john/tfdg-server/server/stopResponse.txt', 'a')
     f.write('\n\n')
+    f.write(datetime.datetime.now().strftime("%m/%d/%y - %H:%M\t"))
     f.write('key error, abandoning stop response')
     f.close()
     return
@@ -85,6 +87,7 @@ def removeOldWatch(http):
   except:
     f = open('/home/john/tfdg-server/server/stopResponse.txt', 'a')
     f.write('\n\n')
+    f.write(datetime.datetime.now().strftime("%m/%d/%y - %H:%M\t"))
     f.write('error making http stop request to channels')
     f.close()
     return
@@ -92,6 +95,7 @@ def removeOldWatch(http):
   # worked as intended, print response to file - should be empty string if it worked
   f = open('/home/john/tfdg-server/server/stopResponse.txt', 'a')
   f.write('\n\n')
+  f.write(datetime.datetime.now().strftime("%m/%d/%y - %H:%M\t"))
   f.write(json.dumps(res))
   f.close()
 
