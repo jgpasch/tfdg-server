@@ -23,6 +23,7 @@
     "async": "^2.5.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
+    "firebase-admin": "^5.1.0",
     "node-cron": "^1.2.0"
   },
   "devDependencies": {
