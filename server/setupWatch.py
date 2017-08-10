@@ -57,7 +57,7 @@ def main():
   now = time.time() * 1000
   # tomorrow = int(now) + 86000000
   # expiration = int(now) + 180000
-  expiration = int(now) + (3600000 * 23)
+  expiration = int(now) + (3600000 * 24)
 
   data = { "id": str(uuid.uuid4()),
            "type": "web_hook",
