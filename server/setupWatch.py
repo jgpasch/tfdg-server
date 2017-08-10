@@ -50,6 +50,33 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
+def removeOldWatch(http):
+  firebase_url = 'https://tfdg-175615.firebaseio.com/config/watchResponse.json'
+  result = requests.get(firebase_url)
+  res = result.json()
+
+  channelId = res['channelId']
+  resourceId = res['resourceId']
+  address = res['address']
+  resourceUri = res['resourceUri']
+  kind = res['kind']
+  myType = res['type']
+
+  service = discovery.build('drive', 'v3', http=http)
+
+  body = {
+    'id': channelId,
+    'resourceId': resourceId,
+    'address': address,
+    'resourceUri': resourceUri,
+    'kind': kind,
+    'type': myType
+  }
+  res = service.channels().stop(body=body).execute()
+  f = open('/home/john/tfdg-server/server/stopResponse.txt', 'w')
+  f.write(json.dumps(res))
+  f.close()
+
 def main():
   global firebase
   firebase_url = 'https://tfdg-175615.firebaseio.com'
@@ -70,6 +97,9 @@ def main():
   credentials = get_credentials()
   http = credentials.authorize(httplib2.Http())
 
+  # remove old watcher _ channel => stop
+  removeOldWatch(http)
+
   service = discovery.build('drive', 'v3', http=http)
   res = service.files().watch(fileId=file_id, body=data).execute()
 
@@ -78,8 +108,16 @@ def main():
   f_write.write('\n\n')
   f_write.close()
 
-  # make post request to firebase, to save the latest channelId and resouceId
-  data = { 'channelId': res['id'], 'resourceId': res['resourceId'] }
+  # SAVE response from files().watch to firebase
+  data = {
+    'channelId': res['id'],
+    'resourceId': res['resourceId'],
+    'address': 'https://bigspender.info/driveCallback',
+    'kind': 'api#channel',
+    'type': 'web_hook',
+    'resourceUri': res['resourceUri'],
+    'expiration': res['expiration']
+  }
   firebase.put('/config', data=data, name="watchResponse")
 
 if __name__ == '__main__':
